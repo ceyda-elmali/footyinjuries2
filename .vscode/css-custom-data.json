@@ -1,0 +1,9 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Tailwind CSS v4 theme configuration block. Defines custom CSS properties that integrate with Tailwind's utility classes."
+    }
+  ]
+}
