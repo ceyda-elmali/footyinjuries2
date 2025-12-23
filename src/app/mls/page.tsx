@@ -45,16 +45,25 @@ export default function MLSInjuries() {
       </section>
 
       <section className="w-full py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4">
           <div className="glass-card rounded-2xl p-12">
-            <div className="text-6xl mb-6">⚽</div>
-            <h2 className="text-3xl font-bold mb-4">MLS Injury Data</h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Comprehensive injury information for MLS is coming soon. We're working on bringing you detailed player injury reports, return dates, and team-by-team analysis.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Check back soon for the latest updates on Inter Miami, LA Galaxy, LAFC, and all MLS clubs.
-            </p>
+            <h2 className="text-3xl font-bold mb-6">MLS Injury Report – Week 32</h2>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                Major League Soccer enters the final stretch of the regular season with 26 active injuries across the league. Teams are managing their squads carefully as playoff positions are finalized.
+              </p>
+              <p>
+                <span className="font-semibold text-foreground">LA Galaxy</span>, <span className="font-semibold text-foreground">Inter Miami</span>, and <span className="font-semibold text-foreground">LAFC</span> are among the teams dealing with key absences as they prepare for the postseason.
+              </p>
+              <p>
+                The physical demands of the MLS schedule, combined with international duty, have contributed to the current injury situation. Most injuries are minor to moderate, with expected return dates before the playoffs.
+              </p>
+              <div className="mt-8 pt-6 border-t border-border text-sm flex items-center justify-between">
+                <span>Last updated: Nov 27, 2025</span>
+                <span>•</span>
+                <span>Stay informed with <span className="text-primary font-semibold">FootyInjuries.com</span></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

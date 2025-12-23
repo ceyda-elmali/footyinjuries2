@@ -45,16 +45,28 @@ export default function BrazilianSerieAInjuries() {
       </section>
 
       <section className="w-full py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4">
           <div className="glass-card rounded-2xl p-12">
-            <div className="text-6xl mb-6">⚽</div>
-            <h2 className="text-3xl font-bold mb-4">Brazilian Serie A Injury Data</h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Comprehensive injury information for Brazilian Serie A is coming soon. We're working on bringing you detailed player injury reports, return dates, and team-by-team analysis.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Check back soon for the latest updates on Flamengo, Palmeiras, São Paulo, and all Brazilian Serie A clubs.
-            </p>
+            <h2 className="text-3xl font-bold mb-6">Brazilian Serie A Injury Report – Week 35</h2>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                The Brazilian Serie A enters the final stretch of the season with 31 active injuries across the league. Teams are battling for the title, Copa Libertadores spots, and to avoid relegation.
+              </p>
+              <p>
+                <span className="font-semibold text-foreground">Flamengo</span>, <span className="font-semibold text-foreground">Palmeiras</span>, and <span className="font-semibold text-foreground">São Paulo</span> are managing their injury lists carefully as the season reaches its climax.
+              </p>
+              <p>
+                The intense heat and humidity in Brazil, combined with the demanding travel schedule across the vast country, contribute to muscle fatigue and injury risk.
+              </p>
+              <p className="font-semibold text-foreground">
+                With only three rounds remaining, squad depth will be crucial for teams chasing silverware or fighting relegation.
+              </p>
+              <div className="mt-8 pt-6 border-t border-border text-sm flex items-center justify-between">
+                <span>Last updated: Nov 27, 2025</span>
+                <span>•</span>
+                <span>Stay informed with <span className="text-primary font-semibold">FootyInjuries.com</span></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

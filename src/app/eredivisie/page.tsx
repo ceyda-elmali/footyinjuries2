@@ -45,16 +45,28 @@ export default function EredivisieInjuries() {
       </section>
 
       <section className="w-full py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4">
           <div className="glass-card rounded-2xl p-12">
-            <div className="text-6xl mb-6">⚽</div>
-            <h2 className="text-3xl font-bold mb-4">Eredivisie Injury Data</h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Comprehensive injury information for Eredivisie is coming soon. We're working on bringing you detailed player injury reports, return dates, and team-by-team analysis.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Check back soon for the latest updates on Ajax, PSV, Feyenoord, and all Eredivisie clubs.
-            </p>
+            <h2 className="text-3xl font-bold mb-6">Eredivisie Injury Report – Week 14</h2>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                The Eredivisie enters Gameweek 14 with 18 active injuries across the league. The traditional top three are managing their squads as they compete on multiple fronts.
+              </p>
+              <p>
+                <span className="font-semibold text-foreground">Ajax</span>, <span className="font-semibold text-foreground">PSV Eindhoven</span>, and <span className="font-semibold text-foreground">Feyenoord</span> are all dealing with minor injury concerns but remain competitive in the title race.
+              </p>
+              <p>
+                The Dutch league's winter break will provide valuable recovery time for players dealing with muscle fatigue and minor knocks accumulated during the first half of the season.
+              </p>
+              <p className="font-semibold text-foreground">
+                European commitments have added to the physical demands on the top clubs, with rotation becoming increasingly important.
+              </p>
+              <div className="mt-8 pt-6 border-t border-border text-sm flex items-center justify-between">
+                <span>Last updated: Nov 27, 2025</span>
+                <span>•</span>
+                <span>Stay informed with <span className="text-primary font-semibold">FootyInjuries.com</span></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

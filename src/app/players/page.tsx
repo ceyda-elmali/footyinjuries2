@@ -1,9 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function PlayersPage() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterPosition, setFilterPosition] = useState<string>("all");
+
+  // Read URL parameters on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const filterParam = params.get('filter');
+    if (filterParam === 'injured') {
+      setFilterStatus('injured');
+    }
+  }, []);
 
   const allPlayers = [
     { name: "Mohamed Salah", team: "Liverpool", position: "Forward", status: "Injured", injury: "Hamstring", returnDate: "Dec 20, 2025", value: "€75M", initials: "MS", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },

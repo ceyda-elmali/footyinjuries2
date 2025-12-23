@@ -7,6 +7,7 @@ export default function Home() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState({ name: "English", flag: "🇬🇧", code: "en" });
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Languages data
   const languages = [
@@ -71,6 +72,9 @@ export default function Home() {
     { name: "David Martinez", team: "Liverpool", severity: "Moderate", bodyPart: "Knee", date: "Dec 10, 2025", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", status: "Out" },
     { name: "Pierre Dubois", team: "PSG", severity: "Minor", bodyPart: "Calf", date: "Nov 25, 2025", league: "Ligue 1", country: "🇫🇷", status: "Doubtful" },
     { name: "Carlos Rodriguez", team: "Barcelona", severity: "Moderate", bodyPart: "Groin", date: "Dec 5, 2025", league: "La Liga", country: "🇪🇸", status: "Out" },
+    { name: "Marco Bianchi", team: "AC Milan", severity: "Severe", bodyPart: "ACL", date: "Dec 8, 2025", league: "Serie A", country: "🇮🇹", status: "Out" },
+    { name: "Hans Mueller", team: "Bayern Munich", severity: "Minor", bodyPart: "Ankle", date: "Dec 9, 2025", league: "Bundesliga", country: "🇩🇪", status: "Doubtful" },
+    { name: "João Santos", team: "Benfica", severity: "Moderate", bodyPart: "Hamstring", date: "Dec 7, 2025", league: "Primeira Liga", country: "🇵🇹", status: "Out" },
   ];
 
   const trendingPlayers = [
@@ -486,9 +490,9 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <button className="text-primary hover:underline font-semibold">
+            <a href="/upcoming-matches" className="text-primary hover:underline font-semibold">
               See All Upcoming Match Injuries →
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -526,9 +530,9 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <button className="text-primary hover:underline font-semibold">
+            <a href="/top-injured" className="text-primary hover:underline font-semibold">
               See All Top Injured Players →
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -551,40 +555,69 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {latestInjuries.map((injury, idx) => (
-                    <tr key={idx} className="border-b border-border hover:bg-card/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="font-semibold">{injury.name}</div>
-                        <div className="text-sm text-muted-foreground">{injury.team}</div>
-                      </td>
-                      <td className="px-6 py-4">{injury.league}</td>
-                      <td className="px-6 py-4 text-2xl">{injury.country}</td>
-                      <td className="px-6 py-4">
-                        <span className={`font-semibold ${getSeverityColor(injury.severity)}`}>
-                          {injury.severity}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">{injury.bodyPart}</td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm">{injury.date}</span>
-                      </td>
-                    </tr>
-                  ))}
+                  {(() => {
+                    const itemsPerPage = 3;
+                    const startIndex = (currentPage - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+                    const currentInjuries = latestInjuries.slice(startIndex, endIndex);
+                    
+                    return currentInjuries.map((injury, idx) => (
+                      <tr key={idx} className="border-b border-border hover:bg-card/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="font-semibold">{injury.name}</div>
+                          <div className="text-sm text-muted-foreground">{injury.team}</div>
+                        </td>
+                        <td className="px-6 py-4">{injury.league}</td>
+                        <td className="px-6 py-4 text-2xl">{injury.country}</td>
+                        <td className="px-6 py-4">
+                          <span className={`font-semibold ${getSeverityColor(injury.severity)}`}>
+                            {injury.severity}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">{injury.bodyPart}</td>
+                        <td className="px-6 py-4">
+                          <span className="text-sm">{injury.date}</span>
+                        </td>
+                      </tr>
+                    ));
+                  })()}
                 </tbody>
               </table>
             </div>
             <div className="px-6 py-4 bg-card/30 flex items-center justify-between border-t border-border">
-              <div className="text-sm text-muted-foreground">Page 1 of 2</div>
+              <div className="text-sm text-muted-foreground">
+                Page {currentPage} of {Math.ceil(latestInjuries.length / 3)}
+              </div>
               <div className="flex gap-2">
-                <button className="px-4 py-2 rounded-lg bg-card border border-border hover:bg-card/80">Previous</button>
-                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90">Next</button>
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-lg border border-border transition-colors ${
+                    currentPage === 1 
+                      ? 'bg-card/50 text-muted-foreground cursor-not-allowed' 
+                      : 'bg-card hover:bg-card/80'
+                  }`}
+                >
+                  Previous
+                </button>
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(latestInjuries.length / 3), prev + 1))}
+                  disabled={currentPage === Math.ceil(latestInjuries.length / 3)}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    currentPage === Math.ceil(latestInjuries.length / 3)
+                      ? 'bg-primary/50 text-primary-foreground cursor-not-allowed'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  }`}
+                >
+                  Next
+                </button>
               </div>
             </div>
           </div>
           <div className="text-center mt-8">
-            <button className="text-primary hover:underline font-semibold">
+            <a href="/latest-injuries" className="text-primary hover:underline font-semibold">
               See All Latest Injured Players →
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -1001,40 +1034,40 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">About Us</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Our Team</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a>
+                <a href="/about" className="block text-sm text-muted-foreground hover:text-primary transition-colors">About Us</a>
+                <a href="/team" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Our Team</a>
+                <a href="/contact" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a>
+                <a href="/privacy" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="/terms" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a>
               </div>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">All League Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Team Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Player Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Methodology</a>
+                <a href="/injuries" className="block text-sm text-muted-foreground hover:text-primary transition-colors">All League Injuries</a>
+                <a href="/teams" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Team Injuries</a>
+                <a href="/players" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Player Injuries</a>
+                <a href="/methodology" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Methodology</a>
               </div>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Leagues</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Premier League Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Bundesliga Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Serie A Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">La Liga Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Ligue 1 Injuries</a>
+                <a href="/premier-league" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Premier League Injuries</a>
+                <a href="/bundesliga" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Bundesliga Injuries</a>
+                <a href="/serie-a" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Serie A Injuries</a>
+                <a href="/la-liga" className="block text-sm text-muted-foreground hover:text-primary transition-colors">La Liga Injuries</a>
+                <a href="/ligue-1" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Ligue 1 Injuries</a>
               </div>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Teams Injuries</h4>
               <div className="space-y-2">
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Manchester City Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Real Madrid Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Bayern Munich Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">PSG Injuries</a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Barcelona Injuries</a>
+                <a href="/team/manchester-city" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Manchester City Injuries</a>
+                <a href="/team/real-madrid" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Real Madrid Injuries</a>
+                <a href="/team/bayern-munich" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Bayern Munich Injuries</a>
+                <a href="/team/psg" className="block text-sm text-muted-foreground hover:text-primary transition-colors">PSG Injuries</a>
+                <a href="/team/barcelona" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Barcelona Injuries</a>
               </div>
             </div>
           </div>

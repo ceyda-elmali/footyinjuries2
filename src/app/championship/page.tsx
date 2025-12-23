@@ -45,16 +45,28 @@ export default function ChampionshipInjuries() {
       </section>
 
       <section className="w-full py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4">
           <div className="glass-card rounded-2xl p-12">
-            <div className="text-6xl mb-6">⚽</div>
-            <h2 className="text-3xl font-bold mb-4">Championship Injury Data</h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Comprehensive injury information for the Championship is coming soon. We're working on bringing you detailed player injury reports, return dates, and team-by-team analysis.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Check back soon for the latest updates on Leeds United, Leicester City, Southampton, and all Championship clubs.
-            </p>
+            <h2 className="text-3xl font-bold mb-6">Championship Injury Report – Week 18</h2>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                The Championship continues to be one of the most physically demanding leagues in world football, with 41 active injuries across the 24 clubs. The relentless fixture schedule takes its toll as teams battle for promotion.
+              </p>
+              <p>
+                <span className="font-semibold text-foreground">Leeds United</span>, <span className="font-semibold text-foreground">Southampton</span>, and <span className="font-semibold text-foreground">Leicester City</span> are among the promotion contenders managing significant injury lists.
+              </p>
+              <p>
+                Hamstring and muscle fatigue injuries are particularly prevalent due to the congested fixture list. Most clubs are rotating their squads heavily to manage player workload.
+              </p>
+              <p className="font-semibold text-foreground">
+                The winter period will be crucial for injury management as teams face three games per week in some cases.
+              </p>
+              <div className="mt-8 pt-6 border-t border-border text-sm flex items-center justify-between">
+                <span>Last updated: Nov 27, 2025</span>
+                <span>•</span>
+                <span>Stay informed with <span className="text-primary font-semibold">FootyInjuries.com</span></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
