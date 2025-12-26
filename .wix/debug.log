@@ -1,0 +1,10 @@
+----- CLI crash report at 2025-12-25T08:32:28.889Z
+Error Trace
+FailedToIdentifyProgramFlow: FailedToIdentifyProgramFlow
+    at _Command.<anonymous> (/Users/ceydaakin/.nvm/versions/node/v20.19.5/lib/node_modules/@wix/cli/src/program.ts:76:15)
+    at _Command.emit (node:events:524:28)
+    at _Command._parseCommand (/Users/ceydaakin/.nvm/versions/node/v20.19.5/lib/node_modules/node_modules/commander/lib/command.js:1607:14)
+    at _Command.parseAsync (/Users/ceydaakin/.nvm/versions/node/v20.19.5/lib/node_modules/node_modules/commander/lib/command.js:1104:16)
+    at <anonymous> (/Users/ceydaakin/.nvm/versions/node/v20.19.5/lib/node_modules/@wix/cli/src/index.tsx:88:39)
+Error Info
+{}

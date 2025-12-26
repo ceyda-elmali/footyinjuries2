@@ -1,8 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚽ FootyInjuries
 
-## Getting Started
+A comprehensive football injury tracking platform providing real-time injury updates, player statistics, and team injury reports across major European leagues and international competitions.
 
-First, run the development server:
+## 🌟 Features
+
+### 📊 Comprehensive Coverage
+
+- **Multiple Leagues**: Premier League, La Liga, Bundesliga, Serie A, Ligue 1, Eredivisie, Primeira Liga, Championship, MLS, Brazilian Serie A, and Saudi Pro League
+- **Real-time Updates**: Latest injury news and status updates
+- **Player Profiles**: Detailed injury history and statistics for individual players
+- **Team Analytics**: Team-specific injury reports and trends
+
+### 🗺️ Interactive Visualizations
+
+- **Injury Map View**: Visual representation of injury locations on player body
+- **Severity Indicators**: Color-coded severity levels (Minor, Moderate, Serious, Long-term)
+- **Recovery Timeline**: Expected return dates and recovery progress
+
+### 🔍 Advanced Features
+
+- **Smart Filtering**: Filter by league, team, position, injury type, and severity
+- **Search Functionality**: Quick search across players, teams, and injuries
+- **Upcoming Matches**: View injury impact on upcoming fixtures
+- **Top Injured Players**: Track most frequently injured players
+- **Latest Injuries**: Stay updated with recent injury news
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.x or higher
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ceydaakin/footyinjuries.git
+cd footyinjuries
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
@@ -10,27 +59,76 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Custom component library with Radix UI primitives
+- **Icons**: Lucide React
+- **Fonts**: Geist (optimized with next/font)
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+footyinjuries/
+├── src/
+│   ├── app/              # Next.js app router pages
+│   │   ├── page.tsx      # Homepage
+│   │   ├── players/      # Player pages
+│   │   ├── teams/        # Team pages
+│   │   ├── injuries/     # Injury listings
+│   │   └── [league]/     # League-specific pages
+│   ├── components/       # Reusable components
+│   │   ├── ui/          # UI primitives
+│   │   └── ...          # Feature components
+│   └── lib/             # Utilities and helpers
+├── public/              # Static assets
+└── ...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Key Pages
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Home** (`/`) - Dashboard with latest injuries, top players, and upcoming matches
+- **Players** (`/players`) - Complete player injury database
+- **Teams** (`/teams`) - Team-specific injury reports
+- **Injuries** (`/injuries`) - Comprehensive injury listings
+- **League Pages** - Dedicated pages for each supported league
+- **About** (`/about`) - Information about the platform
+- **Methodology** (`/methodology`) - Data collection and classification methods
 
-## Deploy on Vercel
+## 📊 Data & Methodology
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Our platform aggregates injury data from multiple reliable sources and categorizes them by:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Injury Type**: Muscle, Ligament, Bone, etc.
+- **Severity**: Minor, Moderate, Serious, Long-term
+- **Body Location**: Visual mapping of injury locations
+- **Recovery Timeline**: Estimated return dates
+
+For detailed information, visit our [Methodology page](https://footyinjuries.com/methodology).
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 📧 Contact
+
+For questions or feedback, please visit our [Contact page](https://footyinjuries.com/contact).
+
+## 🔗 Links
+
+- **Live Site**: [footyinjuries.com](https://footyinjuries.com)
+- **GitHub**: [github.com/ceydaakin/footyinjuries](https://github.com/ceydaakin/footyinjuries)
+
+---
+
+Built with ⚽ by the FootyInjuries team

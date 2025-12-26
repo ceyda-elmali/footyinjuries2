@@ -1,63 +1,63 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
-  // State for dropdowns and search
   const [isLeaguesOpen, setIsLeaguesOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState({ name: "English", flag: "🇬🇧", code: "en" });
+  const [currentStat, setCurrentStat] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchFilter, setSearchFilter] = useState("all"); // all, player, team, league
+  const [selectedLeague, setSelectedLeague] = useState("all");
+  const [selectedTeam, setSelectedTeam] = useState("all");
+  const [selectedSeverity, setSelectedSeverity] = useState("all");
 
-  // Languages data
-  const languages = [
-    { name: "English", flag: "🇬🇧", code: "en" },
-    { name: "Español", flag: "🇪🇸", code: "es" },
-    { name: "Français", flag: "🇫🇷", code: "fr" },
-    { name: "Deutsch", flag: "🇩🇪", code: "de" },
-    { name: "Italiano", flag: "🇮🇹", code: "it" },
-    { name: "Português", flag: "🇵🇹", code: "pt" },
-  ];
+  // Rotate stats every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStat((prev) => (prev + 1) % 4);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Leagues data
   const leagues = [
-    { name: "Premier League Injuries", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", path: "/premier-league" },
-    { name: "La Liga Injuries", flag: "🇪🇸", path: "/la-liga" },
-    { name: "Bundesliga Injuries", flag: "🇩🇪", path: "/bundesliga" },
-    { name: "Serie A Injuries", flag: "🇮🇹", path: "/serie-a" },
-    { name: "Ligue 1 Injuries", flag: "🇫🇷", path: "/ligue-1" },
-    { name: "Primeira Liga Injuries", flag: "🇵🇹", path: "/primeira-liga" },
-    { name: "Eredivisie Injuries", flag: "🇳🇱", path: "/eredivisie" },
-    { name: "Brazilian Serie A Injuries", flag: "🇧🇷", path: "/brazilian-serie-a" },
-    { name: "MLS Injuries", flag: "🇺🇸", path: "/mls" },
-    { name: "Championship Injuries", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", path: "/championship" },
+    { name: "Premier League", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", path: "/premier-league", injuries: 47 },
+    { name: "La Liga", flag: "🇪🇸", path: "/la-liga", injuries: 39 },
+    { name: "Bundesliga", flag: "🇩🇪", path: "/bundesliga", injuries: 35 },
+    { name: "Serie A", flag: "🇮🇹", path: "/serie-a", injuries: 42 },
+    { name: "Ligue 1", flag: "🇫🇷", path: "/ligue-1", injuries: 31 },
+    { name: "Primeira Liga", flag: "🇵🇹", path: "/primeira-liga", injuries: 28 },
+    { name: "Eredivisie", flag: "🇳🇱", path: "/eredivisie", injuries: 24 },
+    { name: "Brazilian Serie A", flag: "🇧🇷", path: "/brazilian-serie-a", injuries: 38 },
+    { name: "MLS", flag: "🇺🇸", path: "/mls", injuries: 33 },
+    { name: "Championship", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", path: "/championship", injuries: 29 },
   ];
 
-  // Updated data based on user requirements
   const upcomingMatches = [
     {
-      home: "Liverpool",
-      away: "Manchester United",
+      homeTeam: "Liverpool",
+      awayTeam: "Manchester United",
       date: "Dec 15, 2025",
       time: "15:00 GMT",
       injuredCount: 5,
-      featuredPlayer: { name: "Mohamed Salah", position: "Forward", team: "Liverpool", severity: "Moderate" },
+      featuredPlayer: { name: "Mohamed Salah", position: "Forward", team: "Liverpool", severity: "Moderate" }
     },
     {
-      home: "Barcelona",
-      away: "Real Madrid",
+      homeTeam: "Barcelona",
+      awayTeam: "Real Madrid",
       date: "Dec 16, 2025",
       time: "20:00 CET",
       injuredCount: 4,
-      featuredPlayer: { name: "Pedri González", position: "Midfielder", team: "Barcelona", severity: "Minor" },
+      featuredPlayer: { name: "Pedri González", position: "Midfielder", team: "Barcelona", severity: "Minor" }
     },
     {
-      home: "Bayern Munich",
-      away: "Borussia Dortmund",
+      homeTeam: "Bayern Munich",
+      awayTeam: "Borussia Dortmund",
       date: "Dec 17, 2025",
       time: "18:30 CET",
       injuredCount: 3,
-      featuredPlayer: { name: "Joshua Kimmich", position: "Midfielder", team: "Bayern Munich", severity: "Severe" },
+      featuredPlayer: { name: "Joshua Kimmich", position: "Midfielder", team: "Bayern Munich", severity: "Severe" }
     },
   ];
 
@@ -68,13 +68,23 @@ export default function Home() {
     { name: "Alessandro Rossi", team: "AC Milan", severity: "Minor", bodyPart: "Muscle", returnDate: "Nov 28, 2025", initials: "AR" },
   ];
 
-  const latestInjuries = [
-    { name: "David Martinez", team: "Liverpool", severity: "Moderate", bodyPart: "Knee", date: "Dec 10, 2025", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", status: "Out" },
-    { name: "Pierre Dubois", team: "PSG", severity: "Minor", bodyPart: "Calf", date: "Nov 25, 2025", league: "Ligue 1", country: "🇫🇷", status: "Doubtful" },
-    { name: "Carlos Rodriguez", team: "Barcelona", severity: "Moderate", bodyPart: "Groin", date: "Dec 5, 2025", league: "La Liga", country: "🇪🇸", status: "Out" },
-    { name: "Marco Bianchi", team: "AC Milan", severity: "Severe", bodyPart: "ACL", date: "Dec 8, 2025", league: "Serie A", country: "🇮🇹", status: "Out" },
-    { name: "Hans Mueller", team: "Bayern Munich", severity: "Minor", bodyPart: "Ankle", date: "Dec 9, 2025", league: "Bundesliga", country: "🇩🇪", status: "Doubtful" },
-    { name: "João Santos", team: "Benfica", severity: "Moderate", bodyPart: "Hamstring", date: "Dec 7, 2025", league: "Primeira Liga", country: "🇵🇹", status: "Out" },
+  const latestInjuriesTable = [
+    { name: "David Martinez", team: "Liverpool", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", severity: "Moderate", bodyPart: "Knee", status: "Dec 10, 2025" },
+    { name: "Pierre Dubois", team: "PSG", league: "Ligue 1", country: "🇫🇷", severity: "Minor", bodyPart: "Calf", status: "Nov 25, 2025" },
+    { name: "Carlos Rodriguez", team: "Barcelona", league: "La Liga", country: "🇪🇸", severity: "Moderate", bodyPart: "Groin", status: "Dec 5, 2025" },
+  ];
+
+  const topTeamsWithInjuries = [
+    { rank: 1, name: "Manchester City", injuries: 12, emoji: "🔵" },
+    { rank: 2, name: "Real Madrid", injuries: 10, emoji: "⚪" },
+    { rank: 3, name: "Bayern Munich", injuries: 9, emoji: "🔴" },
+    { rank: 4, name: "PSG", injuries: 8, emoji: "🔵" },
+    { rank: 5, name: "Barcelona", injuries: 7, emoji: "🔴" },
+    { rank: 6, name: "Liverpool", injuries: 7, emoji: "🔴" },
+    { rank: 7, name: "Chelsea", injuries: 6, emoji: "🔵" },
+    { rank: 8, name: "Arsenal", injuries: 5, emoji: "🔴" },
+    { rank: 9, name: "AC Milan", injuries: 5, emoji: "🔴" },
+    { rank: 10, name: "Juventus", injuries: 4, emoji: "⚫" },
   ];
 
   const trendingPlayers = [
@@ -93,40 +103,8 @@ export default function Home() {
     { name: "Casemiro", team: "Manchester United", date: "Nov 16, 2025" },
   ];
 
-  const teamStats = [
-    { team: "Manchester City", count: 12, emoji: "🔵" },
-    { team: "Real Madrid", count: 10, emoji: "⚪" },
-    { team: "Bayern Munich", count: 9, emoji: "🔴" },
-    { team: "PSG", count: 8, emoji: "🔵" },
-    { team: "Barcelona", count: 7, emoji: "🔴" },
-    { team: "Liverpool", count: 7, emoji: "🔴" },
-    { team: "Chelsea", count: 6, emoji: "🔵" },
-    { team: "Arsenal", count: 5, emoji: "🔴" },
-    { team: "AC Milan", count: 5, emoji: "🔴" },
-    { team: "Juventus", count: 4, emoji: "⚫" },
-  ];
-
-  const leagueStats = [
-    { league: "Premier League", count: 47, flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
-    { league: "La Liga", count: 39, flag: "🇪🇸" },
-    { league: "Bundesliga", count: 35, flag: "🇩🇪" },
-    { league: "Serie A", count: 42, flag: "🇮🇹" },
-    { league: "Ligue 1", count: 31, flag: "🇫🇷" },
-    { league: "Primeira Liga", count: 28, flag: "🇵🇹" },
-    { league: "Eredivisie", count: 24, flag: "🇳🇱" },
-    { league: "Brazilian Serie A", count: 38, flag: "🇧🇷" },
-    { league: "MLS", count: 33, flag: "🇺🇸" },
-    { league: "Championship", count: 29, flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
-  ];
-
-  const featuredMedia = [
-    "The Telegraph",
-    "ESPN",
-    "Marca",
-    "The Athletic",
-    "Sky Sports",
-    "BBC Sport",
-    "Goal.com",
+  const mediaOutlets = [
+    "The Telegraph", "ESPN", "Marca", "The Athletic", "Sky Sports", "BBC Sport", "Goal.com"
   ];
 
   const premiumFeatures = [
@@ -134,183 +112,196 @@ export default function Home() {
       title: "Premium Injury Alerts",
       description: "Get real-time notifications for your favorite teams",
       cta: "Subscribe Now - 50% Off",
-      icon: "🔔",
+      icon: "🔔"
     },
     {
       title: "AI-Powered Analytics",
       description: "Advanced injury predictions & recovery insights",
       cta: "Try Premium Free",
-      icon: "🤖",
+      icon: "🤖"
     },
     {
       title: "Expert Analysis",
       description: "Detailed injury reports from sports medicine experts",
       cta: "Learn More",
-      icon: "📊",
+      icon: "📊"
     },
     {
       title: "Track Your Squad",
       description: "Monitor your fantasy team's injury status",
       cta: "Get Started",
-      icon: "⚽",
+      icon: "⚽"
     },
   ];
 
-  // Inject global CSS for featured scroll animation
-  useEffect(() => {
-    const styleId = 'featured-scroll-global-style';
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style');
-      style.id = styleId;
-      style.innerHTML = `
-        @keyframes featured-scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .featured-scroll-row {
-          animation: featured-scroll 30s linear infinite;
-          will-change: transform;
-        }
-        .featured-scroll-row:hover {
-          animation-play-state: paused;
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  }, []);
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity.toLowerCase()) {
-      case "severe": return "text-red-500";
-      case "moderate": return "text-orange-500";
-      case "minor": return "text-yellow-500";
-      default: return "text-gray-500";
-    }
-  };
-
-  const getSeverityBg = (severity: string) => {
-    switch (severity.toLowerCase()) {
-      case "severe": return "bg-red-500/10 border-red-500/20";
-      case "moderate": return "bg-orange-500/10 border-orange-500/20";
-      case "minor": return "bg-yellow-500/10 border-yellow-500/20";
-      default: return "bg-gray-500/10 border-gray-500/20";
-    }
-  };
+  const stats = [
+    { label: "Total Injuries", value: "346", icon: "🏥" },
+    { label: "Teams Tracked", value: "120+", icon: "⚽" },
+    { label: "Leagues Covered", value: "10", icon: "🌍" },
+    { label: "Daily Updates", value: "24/7", icon: "🔄" },
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Navigation Ribbon */}
-      <nav className="sticky top-0 z-50 w-full bg-card/95 backdrop-blur-md border-b border-border shadow-lg">
+      {/* Modern Navigation */}
+      <nav className="sticky top-0 z-50 w-full glass backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+            <a href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="text-2xl">⚽</span>
               </div>
-              <span className="font-bold text-lg hidden sm:block">FootyInjuries.com</span>
-            </div>
+              <span className="font-bold text-xl hidden sm:block gradient-text">FootyInjuries</span>
+            </a>
 
-            {/* Navigation Links */}
-            <div className="hidden md:flex items-center gap-6">
-              {/* Leagues Dropdown */}
+            <div className="hidden md:flex items-center gap-8">
               <div className="relative">
                 <button
                   onClick={() => setIsLeaguesOpen(!isLeaguesOpen)}
-                  className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors font-medium"
+                  className="flex items-center gap-1 text-gray-600 hover:text-foreground transition-smooth font-medium"
                 >
                   Leagues
-                  <svg
-                    className={`w-4 h-4 transition-transform ${isLeaguesOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className={`w-4 h-4 transition-transform ${isLeaguesOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 
-                {/* Dropdown Menu */}
                 {isLeaguesOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-64 glass-card rounded-xl shadow-2xl border border-border overflow-hidden">
+                  <div className="absolute top-full left-0 mt-2 w-64 glass-card rounded-2xl shadow-2xl border border-border overflow-hidden animate-slide-up">
                     <div className="py-2">
-                      {leagues.map((league, idx) => (
+                      {leagues.slice(0, 6).map((league, idx) => (
                         <a
                           key={idx}
                           href={league.path}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-primary/10 transition-colors"
+                          className="flex items-center justify-between px-4 py-3 hover:bg-muted transition-smooth"
                         >
-                          <span className="text-2xl">{league.flag}</span>
-                          <span className="text-sm font-medium">{league.name}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{league.flag}</span>
+                            <span className="text-sm font-medium">{league.name}</span>
+                          </div>
+                          <span className="badge badge-primary">{league.injuries}</span>
                         </a>
                       ))}
                     </div>
                   </div>
                 )}
               </div>
-
-              <a href="/injuries" className="px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors font-medium">
-                Injuries
-              </a>
-              <a href="/teams" className="px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors font-medium">
-                Teams
-              </a>
-              <a href="/players" className="px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors font-medium">
-                Players
-              </a>
-              <a href="/news" className="px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors font-medium">
-                News
-              </a>
+              <a href="/latest-injuries" className="text-gray-600 hover:text-foreground transition-smooth font-medium">Injuries</a>
+              <a href="/teams" className="text-gray-600 hover:text-foreground transition-smooth font-medium">Teams</a>
+              <a href="/players" className="text-gray-600 hover:text-foreground transition-smooth font-medium">Players</a>
+              <a href="/news" className="text-gray-600 hover:text-foreground transition-smooth font-medium">News</a>
             </div>
 
-            {/* Right Side - Icons */}
             <div className="flex items-center gap-3">
-
-              {/* Language Selector Dropdown */}
+              {/* Language Selector */}
               <div className="relative">
-                <button
+                <button 
                   onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                  className="w-10 h-10 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center"
+                  className="w-10 h-10 rounded-full hover:bg-muted transition-smooth flex items-center justify-center"
                 >
-                  <span className="text-xl">{selectedLanguage.flag}</span>
+                  <span className="text-2xl">
+                    {selectedLanguage === "en" && "🇬🇧"}
+                    {selectedLanguage === "es" && "🇪🇸"}
+                    {selectedLanguage === "fr" && "🇫🇷"}
+                    {selectedLanguage === "de" && "🇩🇪"}
+                    {selectedLanguage === "it" && "🇮🇹"}
+                    {selectedLanguage === "pt" && "🇵🇹"}
+                  </span>
                 </button>
 
-                {/* Language Dropdown Menu */}
                 {isLanguageOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-56 glass-card rounded-xl shadow-2xl border border-border overflow-hidden">
+                  <div className="absolute top-full right-0 mt-2 w-48 glass-card rounded-2xl shadow-2xl border border-border overflow-hidden animate-slide-up z-50">
                     <div className="py-2">
-                      {languages.map((language, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            setSelectedLanguage(language);
-                            setIsLanguageOpen(false);
-                          }}
-                          className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-primary/10 transition-colors ${
-                            selectedLanguage.code === language.code ? 'bg-primary/5' : ''
-                          }`}
-                        >
-                          <span className="text-2xl">{language.flag}</span>
-                          <span className="text-base font-medium">{language.name}</span>
-                        </button>
-                      ))}
+                      <button
+                        onClick={() => {
+                          setSelectedLanguage("en");
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-smooth ${
+                          selectedLanguage === "en" ? "bg-muted/50" : ""
+                        }`}
+                      >
+                        <span className="text-2xl">🇬🇧</span>
+                        <span className="text-sm font-medium">English</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedLanguage("es");
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-smooth ${
+                          selectedLanguage === "es" ? "bg-muted/50" : ""
+                        }`}
+                      >
+                        <span className="text-2xl">🇪🇸</span>
+                        <span className="text-sm font-medium">Español</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedLanguage("fr");
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-smooth ${
+                          selectedLanguage === "fr" ? "bg-muted/50" : ""
+                        }`}
+                      >
+                        <span className="text-2xl">🇫🇷</span>
+                        <span className="text-sm font-medium">Français</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedLanguage("de");
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-smooth ${
+                          selectedLanguage === "de" ? "bg-muted/50" : ""
+                        }`}
+                      >
+                        <span className="text-2xl">🇩🇪</span>
+                        <span className="text-sm font-medium">Deutsch</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedLanguage("it");
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-smooth ${
+                          selectedLanguage === "it" ? "bg-muted/50" : ""
+                        }`}
+                      >
+                        <span className="text-2xl">🇮🇹</span>
+                        <span className="text-sm font-medium">Italiano</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedLanguage("pt");
+                          setIsLanguageOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-smooth ${
+                          selectedLanguage === "pt" ? "bg-muted/50" : ""
+                        }`}
+                      >
+                        <span className="text-2xl">🇵🇹</span>
+                        <span className="text-sm font-medium">Português</span>
+                      </button>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* User Icon */}
-              <button className="w-10 h-10 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors flex items-center justify-center">
+              {/* Profile Button */}
+              <button className="w-10 h-10 rounded-full bg-primary/10 hover:bg-primary/20 transition-smooth flex items-center justify-center">
                 <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </button>
 
-              {/* Mobile Menu Button */}
-              <button className="md:hidden w-8 h-8 rounded-lg hover:bg-primary/10 transition-colors flex items-center justify-center">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              {/* Alerts Button */}
+              <button className="btn btn-primary btn-sm">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
+                <span className="hidden sm:inline">Alerts</span>
               </button>
             </div>
           </div>
@@ -318,207 +309,213 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="w-full bg-gradient-to-br from-primary/20 via-background to-accent/20 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-          <div className="text-center space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Football Injuries Today
+      <section className="relative overflow-hidden bg-gradient-mesh py-20 md:py-32">
+        <div className="absolute inset-0 animated-gradient opacity-20"></div>
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="text-center animate-slide-up">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 gradient-text leading-tight">
+              Football Injuries<br />Today
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-              Real-time injury updates, player return dates & team news for 2025–2026
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12">
+              Real-time injury updates, player return dates & team news for the 2025–2026 season
             </p>
-            
-            {/* Filtered Search Bar */}
-            <div className="relative max-w-2xl mx-auto pt-4">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <div className="relative w-full sm:w-96">
-                  <input
-                    type="search"
-                    placeholder="Search player, team, or league..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-6 py-3 rounded-full bg-card border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                  
-                  {/* Search Results Dropdown */}
-                  {searchQuery && (
-                    <div className="absolute top-full left-0 right-0 mt-2 glass-card rounded-xl shadow-2xl border border-border overflow-hidden z-50 max-h-96 overflow-y-auto">
-                      {/* Players */}
-                      {[...topInjuredPlayers, ...latestInjuries, ...trendingPlayers, ...recoveredPlayers]
-                        .filter(player => player.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                        .slice(0, 5).length > 0 && (
-                        <div className="p-2">
-                          <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">Players</div>
-                          {[...topInjuredPlayers, ...latestInjuries, ...trendingPlayers, ...recoveredPlayers]
-                            .filter(player => player.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                            .slice(0, 5)
-                            .map((player, idx) => (
-                              <a
-                                key={idx}
-                                href={`/player/${player.name.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10 rounded-lg transition-colors"
-                              >
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-xs font-bold">
-                                  {player.name.split(' ').map(n => n[0]).join('')}
-                                </div>
-                                <div className="flex-1">
-                                  <div className="font-medium text-sm">{player.name}</div>
-                                  <div className="text-xs text-muted-foreground">{player.team}</div>
-                                </div>
-                              </a>
-                            ))}
-                        </div>
-                      )}
 
-                      {/* Teams */}
-                      {teamStats
-                        .filter(team => team.team.toLowerCase().includes(searchQuery.toLowerCase()))
-                        .slice(0, 5).length > 0 && (
-                        <div className="p-2 border-t border-border">
-                          <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">Teams</div>
-                          {teamStats
-                            .filter(team => team.team.toLowerCase().includes(searchQuery.toLowerCase()))
-                            .slice(0, 5)
-                            .map((team, idx) => (
-                              <a
-                                key={idx}
-                                href={`/team/${team.team.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10 rounded-lg transition-colors"
-                              >
-                                <span className="text-2xl">{team.emoji}</span>
-                                <div className="flex-1">
-                                  <div className="font-medium text-sm">{team.team}</div>
-                                  <div className="text-xs text-muted-foreground">{team.count} injuries</div>
-                                </div>
-                              </a>
-                            ))}
-                        </div>
-                      )}
+            <div className="max-w-3xl mx-auto mb-12">
+              {/* Search Bar */}
+              <div className="relative mb-4">
+                <input
+                  type="search"
+                  placeholder="Search player, team, or league..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="input w-full pl-12 pr-4 py-4 text-lg rounded-2xl"
+                />
+                <svg className="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
 
-                      {/* Leagues */}
-                      {leagues
-                        .filter(league => league.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                        .slice(0, 5).length > 0 && (
-                        <div className="p-2 border-t border-border">
-                          <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">Leagues</div>
-                          {leagues
-                            .filter(league => league.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                            .slice(0, 5)
-                            .map((league, idx) => (
-                              <a
-                                key={idx}
-                                href={league.path}
-                                className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10 rounded-lg transition-colors"
-                              >
-                                <span className="text-2xl">{league.flag}</span>
-                                <div className="flex-1">
-                                  <div className="font-medium text-sm">{league.name}</div>
-                                </div>
-                              </a>
-                            ))}
-                        </div>
-                      )}
+              {/* Filter Buttons */}
+              <div className="flex flex-wrap gap-3 justify-center">
+                {/* League Filter */}
+                <select
+                  value={selectedLeague}
+                  onChange={(e) => setSelectedLeague(e.target.value)}
+                  className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-border hover:border-primary transition-smooth text-sm font-medium cursor-pointer"
+                >
+                  <option value="all">All Leagues</option>
+                  <option value="premier-league">Premier League</option>
+                  <option value="la-liga">La Liga</option>
+                  <option value="bundesliga">Bundesliga</option>
+                  <option value="serie-a">Serie A</option>
+                  <option value="ligue-1">Ligue 1</option>
+                </select>
 
-                      {/* No Results */}
-                      {[...topInjuredPlayers, ...latestInjuries, ...trendingPlayers, ...recoveredPlayers]
-                        .filter(player => player.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 &&
-                        teamStats.filter(team => team.team.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 &&
-                        leagues.filter(league => league.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
-                        <div className="p-6 text-center text-muted-foreground">
-                          <div className="text-3xl mb-2">🔍</div>
-                          <div className="text-sm">No results found for "{searchQuery}"</div>
-                        </div>
-                      )}
-                    </div>
+                {/* Team Filter */}
+                <select
+                  value={selectedTeam}
+                  onChange={(e) => setSelectedTeam(e.target.value)}
+                  className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-border hover:border-primary transition-smooth text-sm font-medium cursor-pointer"
+                >
+                  <option value="all">All Teams</option>
+                  <option value="manchester-city">Manchester City</option>
+                  <option value="real-madrid">Real Madrid</option>
+                  <option value="bayern-munich">Bayern Munich</option>
+                  <option value="psg">PSG</option>
+                  <option value="barcelona">Barcelona</option>
+                  <option value="liverpool">Liverpool</option>
+                </select>
+
+                {/* Severity Filter */}
+                <select
+                  value={selectedSeverity}
+                  onChange={(e) => setSelectedSeverity(e.target.value)}
+                  className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-border hover:border-primary transition-smooth text-sm font-medium cursor-pointer"
+                >
+                  <option value="all">All Severities</option>
+                  <option value="minor">Minor</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="severe">Severe</option>
+                </select>
+
+                {/* Clear Filters Button */}
+                {(selectedLeague !== "all" || selectedTeam !== "all" || selectedSeverity !== "all" || searchQuery) && (
+                  <button
+                    onClick={() => {
+                      setSelectedLeague("all");
+                      setSelectedTeam("all");
+                      setSelectedSeverity("all");
+                      setSearchQuery("");
+                    }}
+                    className="px-4 py-2 rounded-xl bg-destructive/10 text-destructive hover:bg-destructive/20 transition-smooth text-sm font-medium"
+                  >
+                    Clear Filters
+                  </button>
+                )}
+              </div>
+
+              {/* Active Filters Display */}
+              {(selectedLeague !== "all" || selectedTeam !== "all" || selectedSeverity !== "all") && (
+                <div className="flex flex-wrap gap-2 justify-center mt-4">
+                  {selectedLeague !== "all" && (
+                    <span className="badge badge-primary">
+                      League: {selectedLeague.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                  )}
+                  {selectedTeam !== "all" && (
+                    <span className="badge badge-primary">
+                      Team: {selectedTeam.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                  )}
+                  {selectedSeverity !== "all" && (
+                    <span className="badge badge-primary">
+                      Severity: {selectedSeverity.charAt(0).toUpperCase() + selectedSeverity.slice(1)}
+                    </span>
                   )}
                 </div>
-                <button 
-                  onClick={() => {
-                    if (searchQuery) {
-                      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-                    }
-                  }}
-                  className="px-8 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary/90 transition-all"
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+              {stats.map((stat, idx) => (
+                <div
+                  key={idx}
+                  className={`stat-card card-shine transition-all duration-500 ${
+                    currentStat === idx ? 'scale-105 glow-primary' : ''
+                  }`}
                 >
-                  Search
-                </button>
-              </div>
+                  <div className="text-4xl mb-2">{stat.icon}</div>
+                  <div className="stat-value text-3xl">{stat.value}</div>
+                  <div className="stat-label">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Upcoming Match Injuries */}
-      <section className="w-full py-12 bg-background">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">Upcoming Match Injuries</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold">Upcoming Match Injuries</h2>
+            <a href="/upcoming-matches" className="text-primary hover:underline font-semibold flex items-center gap-2">
+              See All Upcoming Match Injuries →
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {upcomingMatches.map((match, idx) => (
-              <div key={idx} className="glass-card rounded-xl p-6 hover:scale-105 transition-transform">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex-1 text-center">
-                    <div className="font-bold text-lg">{match.home}</div>
-                  </div>
-                  <div className="px-4 text-muted-foreground font-semibold">vs</div>
-                  <div className="flex-1 text-center">
-                    <div className="font-bold text-lg">{match.away}</div>
-                  </div>
-                </div>
-                <div className="text-center text-sm text-muted-foreground mb-4">
-                  {match.date} • {match.time}
-                </div>
-                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 mb-4 text-center">
-                  <div className="text-destructive font-bold">{match.injuredCount} Players Injured</div>
-                </div>
-                <div className="border-t border-border pt-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center font-bold">
-                      {match.featuredPlayer.name.split(' ').map(n => n[0]).join('')}
+              <div key={idx} className="glass-card rounded-2xl p-6 card-shine hover-lift">
+                <div className="text-center mb-6">
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="text-center">
+                      <div className="font-bold text-lg">{match.homeTeam}</div>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-semibold">{match.featuredPlayer.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {match.featuredPlayer.position} • {match.featuredPlayer.team}
-                      </div>
+                    <div className="text-muted-foreground font-bold">vs</div>
+                    <div className="text-center">
+                      <div className="font-bold text-lg">{match.awayTeam}</div>
                     </div>
-                    <div className={`text-sm font-semibold ${getSeverityColor(match.featuredPlayer.severity)}`}>
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-2">{match.date}</div>
+                  <div className="text-sm text-muted-foreground">{match.time}</div>
+                </div>
+
+                <div className="border-t border-border pt-4 mb-4">
+                  <div className="badge badge-destructive mb-3">{match.injuredCount} Players Injured</div>
+                  <div>
+                    <div className="font-bold">{match.featuredPlayer.name}</div>
+                    <div className="text-sm text-muted-foreground">{match.featuredPlayer.position} • {match.featuredPlayer.team}</div>
+                    <span className={`badge mt-2 ${
+                      match.featuredPlayer.severity === "Severe" ? "badge-destructive" :
+                      match.featuredPlayer.severity === "Moderate" ? "badge-warning" :
+                      "badge-accent"
+                    }`}>
                       {match.featuredPlayer.severity}
-                    </div>
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="text-center mt-8">
-            <a href="/upcoming-matches" className="text-primary hover:underline font-semibold">
-              See All Upcoming Match Injuries →
-            </a>
-          </div>
         </div>
       </section>
 
       {/* Top Injured Players */}
-      <section className="w-full py-12 bg-card/30">
+      <section className="py-16 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">Top Injured Players</h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold">Top Injured Players</h2>
+            <a href="/top-injured" className="text-primary hover:underline font-semibold flex items-center gap-2">
+              See All Top Injured Players →
+            </a>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {topInjuredPlayers.map((player, idx) => (
-              <div key={idx} className="glass-card rounded-xl p-6 hover:scale-105 transition-transform">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-lg">
+              <div key={idx} className="glass-card rounded-2xl p-6 card-shine hover-lift">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
                     {player.initials}
                   </div>
                   <div className="flex-1">
-                    <div className="font-bold">{player.name}</div>
-                    <div className="text-sm text-muted-foreground">{player.team}</div>
+                    <h3 className="font-bold mb-1">{player.name}</h3>
+                    <p className="text-sm text-muted-foreground">{player.team}</p>
                   </div>
-                </div>
-                <div className={`inline-block px-3 py-1 rounded-full text-sm font-semibold mb-3 ${getSeverityBg(player.severity)}`}>
-                  <span className={getSeverityColor(player.severity)}>{player.severity}</span>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Body Part:</span>
+                    <span className="text-muted-foreground">Severity:</span>
+                    <span className={`badge ${
+                      player.severity === "Severe" ? "badge-destructive" :
+                      player.severity === "Moderate" ? "badge-warning" :
+                      "badge-accent"
+                    }`}>
+                      {player.severity}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Injury:</span>
                     <span className="font-semibold">{player.bodyPart}</span>
                   </div>
                   <div className="flex justify-between">
@@ -529,165 +526,210 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-8">
-            <a href="/top-injured" className="text-primary hover:underline font-semibold">
-              See All Top Injured Players →
-            </a>
-          </div>
         </div>
       </section>
 
       {/* Latest Injuries Table */}
-      <section className="w-full py-12 bg-background">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">Latest Injuries</h2>
-          <div className="glass-card rounded-xl overflow-hidden">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold">Latest Injuries</h2>
+            <a href="/latest-injuries" className="text-primary hover:underline font-semibold flex items-center gap-2">
+              See All Latest Injured Players →
+            </a>
+          </div>
+
+          <div className="glass-card rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-card border-b border-border">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="px-6 py-4 text-left font-semibold">Player</th>
-                    <th className="px-6 py-4 text-left font-semibold">League</th>
-                    <th className="px-6 py-4 text-left font-semibold">Country</th>
-                    <th className="px-6 py-4 text-left font-semibold">Severity</th>
-                    <th className="px-6 py-4 text-left font-semibold">Body Part</th>
-                    <th className="px-6 py-4 text-left font-semibold">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Player</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">League</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Country</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Severity</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Body Part</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {(() => {
-                    const itemsPerPage = 3;
-                    const startIndex = (currentPage - 1) * itemsPerPage;
-                    const endIndex = startIndex + itemsPerPage;
-                    const currentInjuries = latestInjuries.slice(startIndex, endIndex);
-                    
-                    return currentInjuries.map((injury, idx) => (
-                      <tr key={idx} className="border-b border-border hover:bg-card/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="font-semibold">{injury.name}</div>
-                          <div className="text-sm text-muted-foreground">{injury.team}</div>
-                        </td>
-                        <td className="px-6 py-4">{injury.league}</td>
-                        <td className="px-6 py-4 text-2xl">{injury.country}</td>
-                        <td className="px-6 py-4">
-                          <span className={`font-semibold ${getSeverityColor(injury.severity)}`}>
-                            {injury.severity}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">{injury.bodyPart}</td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm">{injury.date}</span>
-                        </td>
-                      </tr>
-                    ));
-                  })()}
+                  {latestInjuriesTable.map((injury, idx) => (
+                    <tr key={idx} className="border-t border-border hover:bg-muted/30 transition-smooth">
+                      <td className="px-6 py-4">
+                        <div className="font-semibold">{injury.name}</div>
+                        <div className="text-sm text-muted-foreground">{injury.team}</div>
+                      </td>
+                      <td className="px-6 py-4 text-sm">{injury.league}</td>
+                      <td className="px-6 py-4 text-2xl">{injury.country}</td>
+                      <td className="px-6 py-4">
+                        <span className={`badge ${
+                          injury.severity === "Severe" ? "badge-destructive" :
+                          injury.severity === "Moderate" ? "badge-warning" :
+                          "badge-accent"
+                        }`}>
+                          {injury.severity}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm">{injury.bodyPart}</td>
+                      <td className="px-6 py-4 text-sm">{injury.status}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
-            <div className="px-6 py-4 bg-card/30 flex items-center justify-between border-t border-border">
-              <div className="text-sm text-muted-foreground">
-                Page {currentPage} of {Math.ceil(latestInjuries.length / 3)}
-              </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-lg border border-border transition-colors ${
-                    currentPage === 1 
-                      ? 'bg-card/50 text-muted-foreground cursor-not-allowed' 
-                      : 'bg-card hover:bg-card/80'
-                  }`}
-                >
-                  Previous
-                </button>
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(latestInjuries.length / 3), prev + 1))}
-                  disabled={currentPage === Math.ceil(latestInjuries.length / 3)}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    currentPage === Math.ceil(latestInjuries.length / 3)
-                      ? 'bg-primary/50 text-primary-foreground cursor-not-allowed'
-                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
-                  }`}
-                >
-                  Next
-                </button>
-              </div>
+            <div className="border-t border-border px-6 py-4 flex items-center justify-center gap-4">
+              <button 
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                className="btn btn-secondary btn-sm"
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span className="text-sm text-muted-foreground">Page {currentPage} of 2</span>
+              <button 
+                onClick={() => setCurrentPage(Math.min(2, currentPage + 1))}
+                className="btn btn-secondary btn-sm"
+                disabled={currentPage === 2}
+              >
+                Next
+              </button>
             </div>
-          </div>
-          <div className="text-center mt-8">
-            <a href="/latest-injuries" className="text-primary hover:underline font-semibold">
-              See All Latest Injured Players →
-            </a>
           </div>
         </div>
       </section>
 
       {/* As Featured On */}
-      <section className="w-full py-12 bg-card/30 border-y border-border overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 mb-8">
-          <h2 className="text-2xl font-bold text-center">As Featured On</h2>
-        </div>
-        <div className="relative">
-          <div className="flex gap-8 featured-scroll-row">
-            {[...featuredMedia, ...featuredMedia].map((media, idx) => (
-              <div key={idx} className="flex-shrink-0 px-8 py-4 text-xl font-semibold text-muted-foreground whitespace-nowrap">
-                {media}
-              </div>
-            ))}
+      <section className="py-16 bg-muted/30 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">As Featured On</h2>
+          <div className="marquee mb-8">
+            <div className="marquee-content">
+              {mediaOutlets.map((outlet, idx) => (
+                <div key={idx} className="text-lg md:text-xl font-bold text-muted-foreground hover:text-foreground transition-smooth whitespace-nowrap">
+                  {outlet}
+                </div>
+              ))}
+            </div>
+            {/* Duplicate for seamless loop */}
+            <div className="marquee-content" aria-hidden="true">
+              {mediaOutlets.map((outlet, idx) => (
+                <div key={`duplicate-${idx}`} className="text-lg md:text-xl font-bold text-muted-foreground hover:text-foreground transition-smooth whitespace-nowrap">
+                  {outlet}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="max-w-4xl mx-auto px-4 mt-8 text-center text-muted-foreground">
-          FootyInjuries.com is trusted by leading sports media outlets worldwide for accurate football injury updates and player recovery information.
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto">
+            FootyInjuries.com is trusted by leading sports media outlets worldwide for accurate football injury updates and player recovery information.
+          </p>
         </div>
       </section>
 
       {/* Premium Features */}
-      <section className="w-full py-12 bg-background">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {premiumFeatures.map((feature, idx) => (
-              <div key={idx} className="glass-card rounded-xl p-6 text-center hover:scale-105 transition-transform">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+              <div key={idx} className="glass-card rounded-2xl p-6 text-center card-shine hover-lift">
+                <div className="text-5xl mb-4">{feature.icon}</div>
+                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{feature.description}</p>
-                <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all">
-                  {feature.cta}
-                </button>
+                <button className="btn btn-primary btn-sm w-full">{feature.cta}</button>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Grid */}
-      <section className="w-full py-12 bg-card/30">
+      {/* Top 10 Stats */}
+      <section className="py-16 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Top 10 Leagues */}
-            <div className="glass-card rounded-xl p-6">
-              <h3 className="text-2xl font-bold mb-6">Top 10 Leagues Injuries</h3>
+            <div className="glass-card rounded-2xl p-8 card-shine">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-3xl font-bold gradient-text">Top 10 Leagues</h3>
+                <span className="text-4xl">🏆</span>
+              </div>
               <div className="space-y-3">
-                {leagueStats.map((league, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-3 rounded-lg hover:bg-card/50 transition-colors">
-                    <div className="w-8 text-center font-bold text-muted-foreground">{idx + 1}</div>
-                    <div className="text-2xl">{league.flag}</div>
-                    <div className="flex-1 font-semibold">{league.league}</div>
-                    <div className="px-4 py-1 bg-primary/20 text-primary rounded-full font-bold">{league.count}</div>
+                {leagues.map((league, idx) => (
+                  <div 
+                    key={idx} 
+                    className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-muted/30 to-transparent hover:from-primary/10 hover:to-primary/5 transition-all duration-300 hover-lift"
+                    style={{ animationDelay: `${idx * 50}ms` }}
+                  >
+                    {/* Progress Bar Background */}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent transition-all duration-500"
+                      style={{ width: `${(league.injuries / 50) * 100}%` }}
+                    ></div>
+                    
+                    <div className="relative flex items-center justify-between p-4">
+                      <div className="flex items-center gap-4">
+                        {/* Rank with Medal for Top 3 */}
+                        <div className="flex items-center justify-center w-8 h-8">
+                          {idx === 0 && <span className="text-2xl">🥇</span>}
+                          {idx === 1 && <span className="text-2xl">🥈</span>}
+                          {idx === 2 && <span className="text-2xl">🥉</span>}
+                          {idx > 2 && <span className="text-muted-foreground font-bold text-lg">{idx + 1}</span>}
+                        </div>
+                        
+                        <span className="text-3xl group-hover:scale-110 transition-transform">{league.flag}</span>
+                        <span className="font-semibold text-lg group-hover:text-primary transition-colors">{league.name}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl font-bold text-primary">{league.injuries}</span>
+                        <span className="badge badge-primary group-hover:scale-110 transition-transform">
+                          injuries
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Top 10 Teams */}
-            <div className="glass-card rounded-xl p-6">
-              <h3 className="text-2xl font-bold mb-6">Top 10 Teams with Most Injuries</h3>
+            <div className="glass-card rounded-2xl p-8 card-shine">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-3xl font-bold gradient-text">Most Affected Teams</h3>
+                <span className="text-4xl">⚠️</span>
+              </div>
               <div className="space-y-3">
-                {teamStats.map((team, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-3 rounded-lg hover:bg-card/50 transition-colors">
-                    <div className="w-8 text-center font-bold text-muted-foreground">{idx + 1}.</div>
-                    <div className="text-xl">{team.emoji}</div>
-                    <div className="flex-1 font-semibold">{team.team}</div>
-                    <div className="px-4 py-1 bg-destructive/20 text-destructive rounded-full font-bold">{team.count}</div>
+                {topTeamsWithInjuries.map((team, idx) => (
+                  <div 
+                    key={idx} 
+                    className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-muted/30 to-transparent hover:from-destructive/10 hover:to-destructive/5 transition-all duration-300 hover-lift"
+                    style={{ animationDelay: `${idx * 50}ms` }}
+                  >
+                    {/* Progress Bar Background */}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-destructive/5 to-transparent transition-all duration-500"
+                      style={{ width: `${(team.injuries / 15) * 100}%` }}
+                    ></div>
+                    
+                    <div className="relative flex items-center justify-between p-4">
+                      <div className="flex items-center gap-4">
+                        {/* Rank with Medal for Top 3 */}
+                        <div className="flex items-center justify-center w-8 h-8">
+                          {idx === 0 && <span className="text-2xl">🥇</span>}
+                          {idx === 1 && <span className="text-2xl">🥈</span>}
+                          {idx === 2 && <span className="text-2xl">🥉</span>}
+                          {idx > 2 && <span className="text-muted-foreground font-bold text-lg">{team.rank}</span>}
+                        </div>
+                        
+                        <span className="text-3xl group-hover:scale-110 transition-transform">{team.emoji}</span>
+                        <span className="font-semibold text-lg group-hover:text-destructive transition-colors">{team.name}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl font-bold text-destructive">{team.injuries}</span>
+                        <span className="badge badge-destructive group-hover:scale-110 transition-transform">
+                          injuries
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -697,21 +739,43 @@ export default function Home() {
       </section>
 
       {/* Trending & Recovered Players */}
-      <section className="w-full py-12 bg-background">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Trending Players */}
-            <div className="glass-card rounded-xl p-6">
-              <h3 className="text-2xl font-bold mb-6">Trending Players</h3>
-              <div className="space-y-3">
+            <div className="glass-card rounded-2xl p-8 card-shine">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-3xl font-bold gradient-text">Trending Players</h3>
+              </div>
+              <div className="space-y-4">
                 {trendingPlayers.map((player, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-3 rounded-lg hover:bg-card/50 transition-colors cursor-pointer">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold">
-                      {player.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold">{player.name}</div>
-                      <div className="text-sm text-muted-foreground">{player.team}</div>
+                  <div 
+                    key={idx} 
+                    className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-muted/30 to-transparent hover:from-primary/10 hover:to-primary/5 transition-all duration-300 hover-lift p-4"
+                    style={{ animationDelay: `${idx * 50}ms` }}
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Rank Badge */}
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
+                        {idx + 1}
+                      </div>
+
+                      {/* Avatar with pulse animation */}
+                      <div className="relative">
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-secondary opacity-50 blur-md group-hover:opacity-75 transition-opacity"></div>
+                        <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform">
+                          {player.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                      </div>
+
+                      {/* Player Info */}
+                      <div className="flex-1">
+                        <div className="font-bold text-lg group-hover:text-primary transition-colors">{player.name}</div>
+                        <div className="text-sm text-muted-foreground flex items-center gap-2">
+                          <span>⚽</span>
+                          <span>{player.team}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -719,19 +783,48 @@ export default function Home() {
             </div>
 
             {/* Latest Recovered Players */}
-            <div className="glass-card rounded-xl p-6">
-              <h3 className="text-2xl font-bold mb-6">Latest Recovered Players</h3>
-              <div className="space-y-3">
+            <div className="glass-card rounded-2xl p-8 card-shine">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-3xl font-bold gradient-text-secondary">Latest Recovered</h3>
+
+              </div>
+              <div className="space-y-4">
                 {recoveredPlayers.map((player, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-3 rounded-lg hover:bg-card/50 transition-colors cursor-pointer">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center font-bold">
-                      {player.name.split(' ').map(n => n[0]).join('')}
+                  <div 
+                    key={idx} 
+                    className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-muted/30 to-transparent hover:from-green-500/10 hover:to-emerald-500/5 transition-all duration-300 hover-lift p-4"
+                    style={{ animationDelay: `${idx * 50}ms` }}
+                  >
+
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        {/* Avatar with checkmark */}
+                        <div className="relative">
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 opacity-50 blur-md group-hover:opacity-75 transition-opacity"></div>
+                          <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg group-hover:scale-110 transition-transform">
+                            ✓
+                          </div>
+                        </div>
+
+                        {/* Player Info */}
+                        <div className="flex-1">
+                          <div className="font-bold text-lg group-hover:text-green-600 transition-colors">{player.name}</div>
+                          <div className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span>⚽</span>
+                            <span>{player.team}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Recovery Date */}
+                      <div className="text-right">
+                        <div className="badge badge-accent group-hover:scale-110 transition-transform">
+                          Recovered
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">{player.date}</div>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-semibold">{player.name}</div>
-                      <div className="text-sm text-muted-foreground">{player.team}</div>
-                    </div>
-                    <div className="text-sm text-accent font-semibold">{player.date}</div>
                   </div>
                 ))}
               </div>
@@ -740,340 +833,241 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SEO Content Section - Redesigned */}
-      <section className="w-full bg-gradient-to-b from-background via-card/20 to-background border-t border-border py-16">
+      {/* SEO Content Section */}
+      <section className="py-20 bg-muted/30">
         <div className="max-w-6xl mx-auto px-4">
-          {/* Hero Content */}
+          {/* Main Heading */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text leading-tight">
               Football Injuries Today — Latest Updates, Player Return Dates & Team News (2025–2026)
             </h2>
-            <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 font-medium">
               Your real-time source for global football injury updates.
             </p>
-            <div className="glass-card rounded-2xl p-8 max-w-4xl mx-auto">
-              <p className="text-lg leading-relaxed mb-4">
-                Football moves fast — and injuries change everything. Whether you're a fan, analyst, journalist, scout, or bettor looking for reliable player availability information, <span className="font-bold text-primary">FootyInjuries.com</span> delivers the world's most up-to-date injury news, covering every major league, every team, and every player.
-              </p>
-              <p className="text-lg leading-relaxed">
-                From muscle strains to long-term ACL tears, from short recovery knocks to season-ending injuries, our platform tracks every development as it happens — with <span className="font-semibold text-accent">AI-powered injury insights, expected return dates, performance impact, and club medical updates.</span>
-              </p>
+          </div>
+          
+          {/* Intro Card */}
+          <div className="glass-card rounded-3xl p-8 md:p-12 mb-12 card-shine hover-lift">
+            <div className="flex items-start gap-4 mb-6">
+              <span className="text-5xl">⚡</span>
+              <div>
+                <h3 className="text-2xl font-bold mb-4">Real-Time Injury Intelligence</h3>
+                <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
+                  Football moves fast — and injuries change everything. Whether you're a fan, analyst, journalist, scout, or bettor looking for reliable player availability information, FootyInjuries.com delivers the world's most up-to-date injury news, covering every major league, every team, and every player.
+                </p>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  From muscle strains to long-term ACL tears, from short recovery knocks to season-ending injuries, our platform tracks every development as it happens — with AI-powered injury insights, expected return dates, performance impact, and club medical updates.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Why It Matters Section */}
-          <div className="mb-16">
-            <div className="glass-card rounded-2xl p-8 border-l-4 border-primary">
-              <h3 className="text-3xl font-bold mb-6 flex items-center gap-3">
-                <span className="text-4xl">⚡</span>
-                Why Football Injury News Matters
-              </h3>
-              <p className="text-lg mb-4 leading-relaxed">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            {/* Why It Matters */}
+            <div className="glass-card rounded-3xl p-8 card-shine hover-lift">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-4xl">🎯</span>
+                <h3 className="text-2xl font-bold gradient-text">Why It Matters</h3>
+              </div>
+              
+              <p className="text-muted-foreground mb-4 leading-relaxed">
                 Injuries influence lineups, tactics, team strength, and even league outcomes. Clubs adjust their shape, bettors adapt their predictions, and analysts reassess player workloads.
               </p>
-              <p className="text-lg mb-6 leading-relaxed">
-                Knowing which stars are out, doubtful, or returning soon is essential.
-              </p>
-              <div className="bg-card/50 rounded-xl p-6 mb-4">
-                <p className="font-semibold text-lg mb-4"><span className="text-primary">FootyInjuries.com</span> helps you answer questions like:</p>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div className="flex items-start gap-2">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Is my team missing key players this week?</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Which players are doubtful for the next match?</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>How long is a player expected to be out?</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>What injuries are affecting Premier League clubs?</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Which players just returned to training?</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>How does injury timeline impact performance?</span>
-                  </div>
-                </div>
-              </div>
-              <p className="text-lg font-semibold text-accent">We provide the clarity you need — instantly.</p>
-            </div>
-          </div>
-
-          {/* Features Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            {/* Latest Injuries */}
-            <div className="glass-card rounded-2xl p-8 hover:scale-105 transition-transform">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">📊</span>
-                Latest Football Injuries — Updated Daily
-              </h3>
-              <p className="mb-4 text-muted-foreground">Our injury engine covers all major competitions, including:</p>
-              <div className="grid grid-cols-2 gap-2 mb-6">
-                {['Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'MLS', 'Saudi Pro League', 'Championship', 'UCL / UEL / UECL', '+100 more leagues'].map((league, idx) => (
-                  <div key={idx} className="bg-primary/10 border border-primary/20 rounded-lg px-3 py-2 text-sm font-medium">
-                    {league}
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-border pt-4">
-                <p className="font-semibold mb-3">Each player profile includes:</p>
-                <div className="space-y-2 text-sm">
-                  {['Current Injury Status', 'Expected Return Date', 'Injury Type & Severity', 'Rehab Timeline', 'Match Availability', 'Past Injury History', 'Season Performance Metrics', 'AI-generated analysis & risk indicators'].map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      <span className="text-accent">✓</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Common Injuries */}
-            <div className="glass-card rounded-2xl p-8 hover:scale-105 transition-transform">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">🏥</span>
-                Most Common Football Injuries We Track
-              </h3>
-              <p className="mb-4 text-muted-foreground">Football injuries vary by position, playing style, and match load. The ones we track most often are:</p>
-              <div className="grid gap-2 mb-4">
+              
+              <p className="font-semibold mb-4 text-lg">We help you answer:</p>
+              
+              <div className="space-y-3">
                 {[
-                  { name: 'Hamstring Strains', severity: 'moderate' },
-                  { name: 'Ankle Sprains', severity: 'minor' },
-                  { name: 'ACL Tears & Ligament Damage', severity: 'severe' },
-                  { name: 'Groin Injuries', severity: 'moderate' },
-                  { name: 'Knee Problems', severity: 'moderate' },
-                  { name: 'Muscle Fatigue & Overload', severity: 'minor' },
-                  { name: 'Back Issues', severity: 'moderate' },
-                  { name: 'Concussions', severity: 'severe' }
-                ].map((injury, idx) => (
-                  <div key={idx} className={`rounded-lg px-4 py-2 text-sm font-medium border ${
-                    injury.severity === 'severe' ? 'bg-red-500/10 border-red-500/20' :
-                    injury.severity === 'moderate' ? 'bg-orange-500/10 border-orange-500/20' :
-                    'bg-yellow-500/10 border-yellow-500/20'
-                  }`}>
-                    {injury.name}
+                  "Is my team missing key players this week?",
+                  "Which players are doubtful for the next match?",
+                  "How long is a player expected to be out?",
+                  "What injuries are affecting clubs right now?",
+                  "Which players just returned to training?",
+                  "How does injury timeline impact performance?"
+                ].map((question, idx) => (
+                  <div key={idx} className="flex items-start gap-3 group">
+                    <span className="text-primary text-xl mt-0.5 group-hover:scale-125 transition-transform">→</span>
+                    <span className="text-muted-foreground group-hover:text-foreground transition-colors">{question}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">Our system tags them with recovery difficulty and expected downtime so you can assess player risk at a glance.</p>
-            </div>
-          </div>
-
-          {/* Team & Long-term Injuries */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="glass-card rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">👥</span>
-                Team-by-Team Injury Lists
-              </h3>
-              <p className="mb-4 text-muted-foreground">Explore injuries for every club with dedicated team pages showing:</p>
-              <div className="space-y-2 mb-4">
-                {['Current Injured Players', 'Severity Overview', 'Days Missed', 'Injury Timeline Charts', 'Players Returning Soon', 'Fitness Status Indicators', 'Squad Depth & Positional Impact'].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2 bg-card/50 rounded-lg px-3 py-2">
-                    <span className="text-primary">•</span>
-                    <span className="text-sm">{item}</span>
-                  </div>
-                ))}
+              
+              <div className="mt-6 p-4 bg-primary/5 rounded-xl border-l-4 border-primary">
+                <p className="font-semibold text-primary">We provide the clarity you need — instantly.</p>
               </div>
-              <p className="text-sm italic">Whether it's Manchester United injuries, Barcelona injury list, or AC Milan players out, we give you structured, easy-to-navigate team dashboards.</p>
             </div>
 
-            <div className="glass-card rounded-2xl p-8 border-l-4 border-destructive">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">🩺</span>
-                Long-Term Injuries & Big Absences
-              </h3>
-              <p className="mb-4 leading-relaxed">
-                Some injuries reshape entire seasons. ACL tears, Achilles ruptures, and severe hamstring tears can sideline players for months.
+            {/* Features */}
+            <div className="glass-card rounded-3xl p-8 card-shine hover-lift">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-4xl">📊</span>
+                <h3 className="text-2xl font-bold gradient-text">Comprehensive Coverage</h3>
+              </div>
+              
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Our injury engine covers all major competitions, including Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, Saudi Pro League, Championship, UCL / UEL / UECL, and over 100 more domestic and international competitions.
               </p>
-              <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-4 mb-4">
-                <p className="font-semibold mb-3"><span className="text-primary">FootyInjuries.com</span> tracks long-term injuries closely — showing:</p>
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <span className="text-destructive">→</span>
-                    <span className="text-sm">how long they'll be out,</span>
+              
+              <p className="font-semibold mb-4 text-lg">Each player profile includes:</p>
+              
+              <div className="grid grid-cols-1 gap-3">
+                {[
+                  { icon: "📍", text: "Current Injury Status" },
+                  { icon: "📅", text: "Expected Return Date" },
+                  { icon: "⚠️", text: "Injury Type & Severity" },
+                  { icon: "🏥", text: "Rehab Timeline" },
+                  { icon: "✅", text: "Match Availability" },
+                  { icon: "📈", text: "Past Injury History" },
+                  { icon: "⚽", text: "Season Performance Metrics" },
+                  { icon: "🤖", text: "AI-generated analysis & risk indicators" }
+                ].map((item, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-green-500/5 to-transparent hover:from-green-500/10 transition-all group"
+                  >
+                    <span className="text-2xl group-hover:scale-110 transition-transform">{item.icon}</span>
+                    <span className="font-medium group-hover:text-green-600 transition-colors">{item.text}</span>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-destructive">→</span>
-                    <span className="text-sm">how often they've had the same injury,</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-destructive">→</span>
-                    <span className="text-sm">and the expected timeline for full recovery.</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Search & AI Features */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="glass-card rounded-2xl p-8 bg-gradient-to-br from-primary/5 to-accent/5">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">🔍</span>
-                Search Injuries by Player, Team, or League
-              </h3>
-              <div className="space-y-3 mb-4">
-                <p className="text-muted-foreground">Trying to find out if Marcus Silva is injured?</p>
-                <p className="text-muted-foreground">Wondering when Pedri, Bukayo Saka, Jude Bellingham, or Vinícius Júnior will return?</p>
-                <p className="text-muted-foreground">Want the full Premier League injury list before the weekend?</p>
+          {/* Bottom CTA Card */}
+          <div className="glass-card rounded-3xl p-8 md:p-12 card-shine text-center bg-gradient-to-br from-primary/5 to-secondary/5">
+            <div className="max-w-3xl mx-auto">
+              <div className="text-6xl mb-6">🏆</div>
+              <h3 className="text-3xl font-bold mb-4 gradient-text">The Most Complete Injury Database</h3>
+              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+                We're the only platform combining injury tracking, performance data, and AI analysis into one unified experience. Real-time updates, AI-generated insights, and fast, clean, mobile-friendly UI covering 100+ leagues.
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <span className="badge badge-primary text-base px-6 py-3">Real-time Updates</span>
+                <span className="badge badge-secondary text-base px-6 py-3">AI-Powered Insights</span>
+                <span className="badge badge-accent text-base px-6 py-3">100+ Leagues</span>
               </div>
-              <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
-                <p className="font-semibold text-lg text-primary">Just use our global search bar and get answers instantly.</p>
-              </div>
-            </div>
-
-            <div className="glass-card rounded-2xl p-8 bg-gradient-to-br from-accent/5 to-primary/5 border-l-4 border-accent">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">🤖</span>
-                AI-Powered Injury Analysis
-              </h3>
-              <p className="mb-4"><span className="font-semibold text-primary">FootyInjuries.com</span> uses smart AI models that:</p>
-              <div className="space-y-2 mb-4">
-                {['summarize injuries in human language', 'estimate recovery windows', 'analyze performance impact', 'check minutes overload and fatigue risk', 'detect patterns in recurrent injuries', 'generate SEO-optimized insights for every player'].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-2 bg-accent/10 rounded-lg px-3 py-2">
-                    <span className="text-accent">✓</span>
-                    <span className="text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm font-semibold text-accent">This means every player page receives a unique, expert-level breakdown.</p>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Match Impact & Alerts */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="glass-card rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">⚽</span>
-                Match Impact: Who Will Miss the Next Game?
-              </h3>
-              <p className="mb-4 text-muted-foreground">Before each matchday, we update:</p>
-              <div className="grid grid-cols-2 gap-3">
-                {['Unavailable Players', 'Doubtful / 50–50 Players', 'Returning from Injury', 'Players who just resumed training'].map((item, idx) => (
-                  <div key={idx} className="bg-card/50 border border-border rounded-lg px-3 py-2 text-sm font-medium text-center">
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm italic">You can also check upcoming fixtures to see how injuries may affect your team's next match.</p>
-            </div>
-
-            <div className="glass-card rounded-2xl p-8 bg-gradient-to-br from-primary/10 to-accent/10">
-              <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                <span className="text-3xl">🔔</span>
-                Real-Time Injury Alerts
-              </h3>
-              <p className="mb-4 text-muted-foreground">Get instant updates on:</p>
-              <div className="space-y-2 mb-4">
-                {['New injuries', 'Training setbacks', 'Recovery progress', 'Suspensions', 'Matchday squad availability'].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-3 py-2">
-                    <span className="text-primary">🔔</span>
-                    <span className="text-sm font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm font-semibold">Your homepage feed updates constantly to reflect the newest medical information.</p>
-            </div>
-          </div>
-
-          {/* Final CTA Section */}
-          <div className="glass-card rounded-2xl p-10 text-center bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-2 border-primary/20">
-            <h3 className="text-3xl font-bold mb-6">Why FootyInjuries.com Is the Most Complete Injury Database</h3>
-            <p className="text-lg mb-8 text-muted-foreground">Compared to ordinary injury lists, we provide:</p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              {[
-                'Real-time updates',
-                'AI-generated insights',
-                'Player performance + minutes load',
-                'Long-term injury timelines',
-                'Historical medical records',
-                'Team depth + positional impact',
-                'Fast, clean, mobile-friendly UI',
-                'Searchable platform covering 100+ leagues'
-              ].map((item, idx) => (
-                <div key={idx} className="bg-card rounded-xl p-4 border border-border hover:border-primary transition-colors">
-                  <div className="flex items-center gap-2 justify-center">
-                    <span className="text-accent text-xl">✔</span>
-                    <span className="font-medium text-sm">{item}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              We're the only platform combining injury tracking, performance data, and AI analysis into one unified experience.
-            </p>
+      {/* CTA Section */}
+      <section className="py-24 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+        <div className="absolute inset-0 animated-gradient opacity-30"></div>
+        <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
+          <h2 className="text-5xl md:text-7xl font-bold mb-8 text-[#6366F1] leading-tight">
+            Never Miss an Update
+          </h2>
+          <p className="text-2xl md:text-3xl text-gray-700 mb-12 font-normal max-w-3xl mx-auto">
+            Get instant notifications when your favorite teams have injury news
+          </p>
+          <div className="flex flex-wrap gap-6 justify-center items-center">
+            <button 
+              onClick={() => {
+                if ('Notification' in window) {
+                  Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                      alert('✅ Notifications enabled! You\'ll receive injury updates.');
+                    } else if (permission === 'denied') {
+                      alert('❌ Notifications blocked. Please enable them in your browser settings.');
+                    }
+                  });
+                } else {
+                  alert('❌ Your browser doesn\'t support notifications.');
+                }
+              }}
+              className="group flex items-center gap-3 px-8 py-4 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-200"
+            >
+              <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span className="text-lg font-semibold text-gray-800">Enable Notifications</span>
+            </button>
+            <button 
+              onClick={() => {
+                const seoSection = document.querySelector('section:has(h2:contains("Football Injuries Today"))');
+                if (seoSection) {
+                  seoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="text-lg font-semibold text-gray-800 hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              Learn More
+            </button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-card border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 py-12">
+      <footer className="bg-card border-t border-border py-16">
+        <div className="max-w-7xl mx-auto px-4">
           {/* Logo and Description */}
-          <div className="mb-10">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-3xl">⚽</span>
-              <h3 className="text-xl font-bold">FootyInjuries.com</h3>
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                <span className="text-2xl">⚽</span>
+              </div>
+              <span className="font-bold text-xl gradient-text">FootyInjuries.com</span>
             </div>
-            <p className="text-sm text-muted-foreground max-w-2xl">
+            <p className="text-muted-foreground max-w-2xl leading-relaxed">
               FootyInjuries.com is the home of football player injuries. We provide daily injury information, analysis, and predictions for football fans. Our goal is to find recent injuries about players easily and effective.
             </p>
           </div>
 
           {/* Footer Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            {/* Company */}
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <div className="space-y-2">
-                <a href="/about" className="block text-sm text-muted-foreground hover:text-primary transition-colors">About Us</a>
-                <a href="/team" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Our Team</a>
-                <a href="/contact" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a>
-                <a href="/privacy" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="/terms" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a>
+              <h3 className="font-bold mb-4 text-foreground">Company</h3>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <a href="/about" className="block hover:text-primary transition-smooth">About Us</a>
+                <a href="/team" className="block hover:text-primary transition-smooth">Our Team</a>
+                <a href="/contact" className="block hover:text-primary transition-smooth">Contact</a>
+                <a href="/privacy" className="block hover:text-primary transition-smooth">Privacy Policy</a>
+                <a href="/terms" className="block hover:text-primary transition-smooth">Terms of Service</a>
               </div>
             </div>
+
+            {/* Resources */}
             <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <div className="space-y-2">
-                <a href="/injuries" className="block text-sm text-muted-foreground hover:text-primary transition-colors">All League Injuries</a>
-                <a href="/teams" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Team Injuries</a>
-                <a href="/players" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Player Injuries</a>
-                <a href="/methodology" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Methodology</a>
+              <h3 className="font-bold mb-4 text-foreground">Resources</h3>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <a href="/latest-injuries" className="block hover:text-primary transition-smooth">All League Injuries</a>
+                <a href="/teams" className="block hover:text-primary transition-smooth">Team Injuries</a>
+                <a href="/players" className="block hover:text-primary transition-smooth">Player Injuries</a>
+                <a href="/methodology" className="block hover:text-primary transition-smooth">Methodology</a>
               </div>
             </div>
+
+            {/* Leagues */}
             <div>
-              <h4 className="font-semibold mb-4">Leagues</h4>
-              <div className="space-y-2">
-                <a href="/premier-league" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Premier League Injuries</a>
-                <a href="/bundesliga" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Bundesliga Injuries</a>
-                <a href="/serie-a" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Serie A Injuries</a>
-                <a href="/la-liga" className="block text-sm text-muted-foreground hover:text-primary transition-colors">La Liga Injuries</a>
-                <a href="/ligue-1" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Ligue 1 Injuries</a>
+              <h3 className="font-bold mb-4 text-foreground">Leagues</h3>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <a href="/premier-league" className="block hover:text-primary transition-smooth">Premier League Injuries</a>
+                <a href="/bundesliga" className="block hover:text-primary transition-smooth">Bundesliga Injuries</a>
+                <a href="/serie-a" className="block hover:text-primary transition-smooth">Serie A Injuries</a>
+                <a href="/la-liga" className="block hover:text-primary transition-smooth">La Liga Injuries</a>
+                <a href="/ligue-1" className="block hover:text-primary transition-smooth">Ligue 1 Injuries</a>
               </div>
             </div>
+
+            {/* Teams Injuries */}
             <div>
-              <h4 className="font-semibold mb-4">Teams Injuries</h4>
-              <div className="space-y-2">
-                <a href="/team/manchester-city" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Manchester City Injuries</a>
-                <a href="/team/real-madrid" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Real Madrid Injuries</a>
-                <a href="/team/bayern-munich" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Bayern Munich Injuries</a>
-                <a href="/team/psg" className="block text-sm text-muted-foreground hover:text-primary transition-colors">PSG Injuries</a>
-                <a href="/team/barcelona" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Barcelona Injuries</a>
+              <h3 className="font-bold mb-4 text-foreground">Teams Injuries</h3>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <a href="/teams/manchester-city" className="block hover:text-primary transition-smooth">Manchester City Injuries</a>
+                <a href="/teams/real-madrid" className="block hover:text-primary transition-smooth">Real Madrid Injuries</a>
+                <a href="/teams/bayern-munich" className="block hover:text-primary transition-smooth">Bayern Munich Injuries</a>
+                <a href="/teams/psg" className="block hover:text-primary transition-smooth">PSG Injuries</a>
+                <a href="/teams/barcelona" className="block hover:text-primary transition-smooth">Barcelona Injuries</a>
               </div>
             </div>
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-border pt-6 text-center text-sm text-muted-foreground">
+          <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
             <p>© 2025 FootyInjuries.com. All rights reserved.</p>
           </div>
         </div>
