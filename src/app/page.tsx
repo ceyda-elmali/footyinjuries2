@@ -8,10 +8,6 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentStat, setCurrentStat] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchFilter, setSearchFilter] = useState("all"); // all, player, team, league
-  const [selectedLeague, setSelectedLeague] = useState("all");
-  const [selectedTeam, setSelectedTeam] = useState("all");
-  const [selectedSeverity, setSelectedSeverity] = useState("all");
 
   // Rotate stats every 3 seconds
   useEffect(() => {
@@ -68,11 +64,32 @@ export default function Home() {
     { name: "Alessandro Rossi", team: "AC Milan", severity: "Minor", bodyPart: "Muscle", returnDate: "Nov 28, 2025", initials: "AR" },
   ];
 
-  const latestInjuriesTable = [
+  const allInjuries = [
     { name: "David Martinez", team: "Liverpool", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", severity: "Moderate", bodyPart: "Knee", status: "Dec 10, 2025" },
     { name: "Pierre Dubois", team: "PSG", league: "Ligue 1", country: "🇫🇷", severity: "Minor", bodyPart: "Calf", status: "Nov 25, 2025" },
     { name: "Carlos Rodriguez", team: "Barcelona", league: "La Liga", country: "🇪🇸", severity: "Moderate", bodyPart: "Groin", status: "Dec 5, 2025" },
+    { name: "Erling Haaland", team: "Manchester City", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", severity: "Severe", bodyPart: "Hamstring", status: "Jan 15, 2026" },
+    { name: "Kylian Mbappé", team: "Real Madrid", league: "La Liga", country: "🇪🇸", severity: "Minor", bodyPart: "Ankle", status: "Dec 20, 2025" },
+    { name: "Harry Kane", team: "Bayern Munich", league: "Bundesliga", country: "🇩🇪", severity: "Moderate", bodyPart: "Back", status: "Dec 18, 2025" },
+    { name: "Vinícius Jr.", team: "Real Madrid", league: "La Liga", country: "🇪🇸", severity: "Severe", bodyPart: "Knee", status: "Feb 1, 2026" },
+    { name: "Mohamed Salah", team: "Liverpool", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", severity: "Minor", bodyPart: "Muscle", status: "Dec 12, 2025" },
+    { name: "Jude Bellingham", team: "Real Madrid", league: "La Liga", country: "🇪🇸", severity: "Moderate", bodyPart: "Shoulder", status: "Dec 22, 2025" },
+    { name: "Phil Foden", team: "Manchester City", league: "Premier League", country: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", severity: "Minor", bodyPart: "Foot", status: "Dec 8, 2025" },
   ];
+
+  // Filter injuries based on search
+  const filteredInjuries = React.useMemo(() => {
+    return allInjuries.filter(injury => {
+      // Search filter
+      const searchLower = searchQuery.toLowerCase();
+      return !searchQuery || 
+        injury.name.toLowerCase().includes(searchLower) ||
+        injury.team.toLowerCase().includes(searchLower) ||
+        injury.league.toLowerCase().includes(searchLower);
+    });
+  }, [searchQuery]);
+
+  const latestInjuriesTable = filteredInjuries.slice(0, 3);
 
   const topTeamsWithInjuries = [
     { rank: 1, name: "Manchester City", injuries: 12, emoji: "🔵" },
@@ -309,114 +326,48 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-mesh py-20 md:py-32">
+      <section className="relative overflow-hidden bg-gradient-mesh py-12 md:py-16">
         <div className="absolute inset-0 animated-gradient opacity-20"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="text-center animate-slide-up">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 gradient-text leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 gradient-text leading-tight">
               Football Injuries<br />Today
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               Real-time injury updates, player return dates & team news for the 2025–2026 season
             </p>
 
-            <div className="max-w-3xl mx-auto mb-12">
+            <div className="max-w-4xl mx-auto mb-8">
               {/* Search Bar */}
-              <div className="relative mb-4">
-                <input
-                  type="search"
-                  placeholder="Search player, team, or league..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input w-full pl-12 pr-4 py-4 text-lg rounded-2xl"
-                />
-                <svg className="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-
-              {/* Filter Buttons */}
-              <div className="flex flex-wrap gap-3 justify-center">
-                {/* League Filter */}
-                <select
-                  value={selectedLeague}
-                  onChange={(e) => setSelectedLeague(e.target.value)}
-                  className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-border hover:border-primary transition-smooth text-sm font-medium cursor-pointer"
-                >
-                  <option value="all">All Leagues</option>
-                  <option value="premier-league">Premier League</option>
-                  <option value="la-liga">La Liga</option>
-                  <option value="bundesliga">Bundesliga</option>
-                  <option value="serie-a">Serie A</option>
-                  <option value="ligue-1">Ligue 1</option>
-                </select>
-
-                {/* Team Filter */}
-                <select
-                  value={selectedTeam}
-                  onChange={(e) => setSelectedTeam(e.target.value)}
-                  className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-border hover:border-primary transition-smooth text-sm font-medium cursor-pointer"
-                >
-                  <option value="all">All Teams</option>
-                  <option value="manchester-city">Manchester City</option>
-                  <option value="real-madrid">Real Madrid</option>
-                  <option value="bayern-munich">Bayern Munich</option>
-                  <option value="psg">PSG</option>
-                  <option value="barcelona">Barcelona</option>
-                  <option value="liverpool">Liverpool</option>
-                </select>
-
-                {/* Severity Filter */}
-                <select
-                  value={selectedSeverity}
-                  onChange={(e) => setSelectedSeverity(e.target.value)}
-                  className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-border hover:border-primary transition-smooth text-sm font-medium cursor-pointer"
-                >
-                  <option value="all">All Severities</option>
-                  <option value="minor">Minor</option>
-                  <option value="moderate">Moderate</option>
-                  <option value="severe">Severe</option>
-                </select>
-
-                {/* Clear Filters Button */}
-                {(selectedLeague !== "all" || selectedTeam !== "all" || selectedSeverity !== "all" || searchQuery) && (
-                  <button
-                    onClick={() => {
-                      setSelectedLeague("all");
-                      setSelectedTeam("all");
-                      setSelectedSeverity("all");
-                      setSearchQuery("");
-                    }}
-                    className="px-4 py-2 rounded-xl bg-destructive/10 text-destructive hover:bg-destructive/20 transition-smooth text-sm font-medium"
-                  >
-                    Clear Filters
-                  </button>
-                )}
-              </div>
-
-              {/* Active Filters Display */}
-              {(selectedLeague !== "all" || selectedTeam !== "all" || selectedSeverity !== "all") && (
-                <div className="flex flex-wrap gap-2 justify-center mt-4">
-                  {selectedLeague !== "all" && (
-                    <span className="badge badge-primary">
-                      League: {selectedLeague.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
-                    </span>
-                  )}
-                  {selectedTeam !== "all" && (
-                    <span className="badge badge-primary">
-                      Team: {selectedTeam.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
-                    </span>
-                  )}
-                  {selectedSeverity !== "all" && (
-                    <span className="badge badge-primary">
-                      Severity: {selectedSeverity.charAt(0).toUpperCase() + selectedSeverity.slice(1)}
-                    </span>
+              <div className="relative">
+                <div className="relative group">
+                  <input
+                    type="search"
+                    placeholder="Search player, team, or league..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="input w-full pl-12 pr-4 py-3.5 text-base rounded-3xl shadow-lg group-hover:shadow-xl transition-all border-2 border-transparent focus:border-primary"
+                  />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   )}
                 </div>
-              )}
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
               {stats.map((stat, idx) => (
                 <div
                   key={idx}
@@ -424,9 +375,9 @@ export default function Home() {
                     currentStat === idx ? 'scale-105 glow-primary' : ''
                   }`}
                 >
-                  <div className="text-4xl mb-2">{stat.icon}</div>
-                  <div className="stat-value text-3xl">{stat.value}</div>
-                  <div className="stat-label">{stat.label}</div>
+                  <div className="text-3xl mb-1.5">{stat.icon}</div>
+                  <div className="stat-value text-2xl">{stat.value}</div>
+                  <div className="stat-label text-sm">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -533,68 +484,91 @@ export default function Home() {
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold">Latest Injuries</h2>
+            <div className="flex items-center gap-4">
+              <h2 className="text-3xl md:text-4xl font-bold">Latest Injuries</h2>
+              {searchQuery && (
+                <span className="badge badge-primary text-base px-4 py-2">
+                  {filteredInjuries.length} {filteredInjuries.length === 1 ? 'result' : 'results'}
+                </span>
+              )}
+            </div>
             <a href="/latest-injuries" className="text-primary hover:underline font-semibold flex items-center gap-2">
               See All Latest Injured Players →
             </a>
           </div>
 
-          <div className="glass-card rounded-2xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-muted/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Player</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">League</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Country</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Severity</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Body Part</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {latestInjuriesTable.map((injury, idx) => (
-                    <tr key={idx} className="border-t border-border hover:bg-muted/30 transition-smooth">
-                      <td className="px-6 py-4">
-                        <div className="font-semibold">{injury.name}</div>
-                        <div className="text-sm text-muted-foreground">{injury.team}</div>
-                      </td>
-                      <td className="px-6 py-4 text-sm">{injury.league}</td>
-                      <td className="px-6 py-4 text-2xl">{injury.country}</td>
-                      <td className="px-6 py-4">
-                        <span className={`badge ${
-                          injury.severity === "Severe" ? "badge-destructive" :
-                          injury.severity === "Moderate" ? "badge-warning" :
-                          "badge-accent"
-                        }`}>
-                          {injury.severity}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm">{injury.bodyPart}</td>
-                      <td className="px-6 py-4 text-sm">{injury.status}</td>
+          {filteredInjuries.length === 0 ? (
+            <div className="glass-card rounded-2xl p-12 text-center">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-2xl font-bold mb-2">No injuries found</h3>
+              <p className="text-muted-foreground mb-6">
+                Try adjusting your search to find what you're looking for.
+              </p>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="btn btn-primary"
+              >
+                Clear Search
+              </button>
+            </div>
+          ) : (
+            <div className="glass-card rounded-2xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-muted/50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-semibold">Player</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold">League</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold">Country</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold">Severity</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold">Body Part</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {latestInjuriesTable.map((injury, idx) => (
+                      <tr key={idx} className="border-t border-border hover:bg-muted/30 transition-smooth">
+                        <td className="px-6 py-4">
+                          <div className="font-semibold">{injury.name}</div>
+                          <div className="text-sm text-muted-foreground">{injury.team}</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm">{injury.league}</td>
+                        <td className="px-6 py-4 text-2xl">{injury.country}</td>
+                        <td className="px-6 py-4">
+                          <span className={`badge ${
+                            injury.severity === "Severe" ? "badge-destructive" :
+                            injury.severity === "Moderate" ? "badge-warning" :
+                            "badge-accent"
+                          }`}>
+                            {injury.severity}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm">{injury.bodyPart}</td>
+                        <td className="px-6 py-4 text-sm">{injury.status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="border-t border-border px-6 py-4 flex items-center justify-center gap-4">
+                <button 
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  className="btn btn-secondary btn-sm"
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className="text-sm text-muted-foreground">Page {currentPage} of 2</span>
+                <button 
+                  onClick={() => setCurrentPage(Math.min(2, currentPage + 1))}
+                  className="btn btn-secondary btn-sm"
+                  disabled={currentPage === 2}
+                >
+                  Next
+                </button>
+              </div>
             </div>
-            <div className="border-t border-border px-6 py-4 flex items-center justify-center gap-4">
-              <button 
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                className="btn btn-secondary btn-sm"
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className="text-sm text-muted-foreground">Page {currentPage} of 2</span>
-              <button 
-                onClick={() => setCurrentPage(Math.min(2, currentPage + 1))}
-                className="btn btn-secondary btn-sm"
-                disabled={currentPage === 2}
-              >
-                Next
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
